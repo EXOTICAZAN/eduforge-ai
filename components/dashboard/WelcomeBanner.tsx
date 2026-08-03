@@ -5,9 +5,19 @@ import { ease } from "@/lib/motion";
 
 interface WelcomeBannerProps {
   name: string;
+  email?: string;
+  country?: string | null;
+  grade?: string | null;
+  learningGoal?: string | null;
 }
 
-export default function WelcomeBanner({ name }: WelcomeBannerProps) {
+export default function WelcomeBanner({
+  name,
+  email,
+  country,
+  grade,
+  learningGoal,
+}: WelcomeBannerProps) {
   const hour = new Date().getHours();
   const greeting =
     hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
@@ -25,9 +35,15 @@ export default function WelcomeBanner({ name }: WelcomeBannerProps) {
         <h1 className="mt-1 text-2xl font-bold tracking-tight text-white sm:text-3xl">
           Welcome back, {name}
         </h1>
-        <p className="mt-2 max-w-lg text-sm text-slate-400">
-          You&apos;re on a 12-day streak. Keep the momentum — your next AI Tutor session is ready.
-        </p>
+        <div className="mt-4 space-y-1 text-sm text-slate-300">
+  <p>📧 {email}</p>
+
+  {country && <p>🌍 Country: {country}</p>}
+
+  {grade && <p>🎓 Grade: {grade}</p>}
+
+  {learningGoal && <p>🎯 Goal: {learningGoal}</p>}
+</div>
       </div>
     </motion.div>
   );

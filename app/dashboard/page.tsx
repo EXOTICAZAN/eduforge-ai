@@ -10,6 +10,7 @@ import UpcomingTasks from "@/components/dashboard/UpcomingTasks";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
+
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -18,18 +19,34 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", user.id)
+    .single();
+
   const name =
-    (user.user_metadata?.full_name as string | undefined) ||
+    profile?.full_name ||
     user.email?.split("@")[0] ||
     "Learner";
 
   return (
-    <DashboardShell userName={name} userEmail={user.email ?? ""}>
+    <DashboardShell
+      userName={name}
+      userEmail={profile?.email ?? user.email ?? ""}
+    >
       <div className="mx-auto max-w-7xl space-y-6">
-        <WelcomeBanner name={name.split(" ")[0]} />
+       <WelcomeBanner
+  name={name.split(" ")[0]}
+  email={profile?.email}
+  country={profile?.country}
+  grade={profile?.grade}
+  learningGoal={profile?.learning_goal}
+/>
         <StatCards />
         <QuickActions />
         <ProgressCharts />
+
         <div className="grid gap-4 lg:grid-cols-2">
           <RecentActivity />
           <UpcomingTasks />

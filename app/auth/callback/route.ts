@@ -1,10 +1,18 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
+// `next` is attacker-controlled. Without this check, `?next=/\evil.com`
+// becomes a Location of `https://app/\evil.com`, which browsers normalise to
+// `//evil.com` and follow off-site after a successful login.
+function safeRedirectPath(value: string | null): string {
+  if (!value) return "/dashboard";
+  return /^\/(?!\/)/.test(value) ? value : "/dashboard";
+}
+
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
-  const next = searchParams.get("next") ?? "/dashboard";
+  const next = safeRedirectPath(searchParams.get("next"));
 
   if (code) {
     const supabase = await createClient();

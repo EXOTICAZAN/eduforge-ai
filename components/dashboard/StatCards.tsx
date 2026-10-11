@@ -3,18 +3,65 @@
 import { motion } from "framer-motion";
 import { Flame, Zap, Trophy, Cpu } from "lucide-react";
 import { ease } from "@/lib/motion";
+import type { DashboardStats } from "@/lib/study/types";
 
-const stats = [
-  { label: "Study Streak", value: "12", unit: "days", icon: Flame, color: "from-orange-500 to-amber-500", glow: "shadow-orange-500/20" },
-  { label: "XP", value: "2,840", unit: "pts", icon: Zap, color: "from-indigo-500 to-blue-500", glow: "shadow-indigo-500/20" },
-  { label: "Level", value: "8", unit: "Scholar", icon: Trophy, color: "from-purple-500 to-pink-500", glow: "shadow-purple-500/20" },
-  { label: "AI Usage", value: "47", unit: "queries", icon: Cpu, color: "from-emerald-500 to-teal-500", glow: "shadow-emerald-500/20" },
+const LEVEL_TITLES = [
+  "Novice",
+  "Apprentice",
+  "Scholar",
+  "Adept",
+  "Expert",
+  "Master",
+  "Sage",
 ];
 
-export default function StatCards() {
+function levelTitle(level: number) {
+  return LEVEL_TITLES[Math.min(level - 1, LEVEL_TITLES.length - 1)] ?? "Scholar";
+}
+
+interface StatCardsProps {
+  stats: DashboardStats;
+}
+
+export default function StatCards({ stats }: StatCardsProps) {
+  const cards = [
+    {
+      label: "Study Streak",
+      value: String(stats.streak_days),
+      unit: stats.streak_days === 1 ? "day" : "days",
+      icon: Flame,
+      color: "from-orange-500 to-amber-500",
+      glow: "shadow-orange-500/20",
+    },
+    {
+      label: "XP",
+      value: stats.total_xp.toLocaleString(),
+      unit: "pts",
+      icon: Zap,
+      color: "from-indigo-500 to-blue-500",
+      glow: "shadow-indigo-500/20",
+    },
+    {
+      label: "Level",
+      value: String(stats.level),
+      unit: levelTitle(stats.level),
+      icon: Trophy,
+      color: "from-purple-500 to-pink-500",
+      glow: "shadow-purple-500/20",
+    },
+    {
+      label: "AI Usage",
+      value: String(stats.ai_usage),
+      unit: "queries",
+      icon: Cpu,
+      color: "from-emerald-500 to-teal-500",
+      glow: "shadow-emerald-500/20",
+    },
+  ];
+
   return (
     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-      {stats.map((stat, i) => (
+      {cards.map((stat, i) => (
         <motion.div
           key={stat.label}
           initial={{ opacity: 0, y: 16 }}

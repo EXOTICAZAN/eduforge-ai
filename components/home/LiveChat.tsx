@@ -29,8 +29,11 @@ export default function LiveChat() {
       timers.push(setTimeout(fn, ms));
     };
 
-    setPhase("idle");
-    setDisplayed("");
+    // Reset state asynchronously to avoid triggering a cascading render synchronously in the effect
+    later(() => {
+      setPhase("idle");
+      setDisplayed("");
+    }, 0);
 
     later(() => setPhase("user"), 500);
     later(() => setPhase("typing"), 1600);

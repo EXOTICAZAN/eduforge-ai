@@ -23,9 +23,16 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  let user = null;
+  try {
+    const {
+      data: { user: authUser },
+    } = await supabase.auth.getUser();
+    user = authUser;
+  } catch {
+    // Transient network error (e.g. AuthRetryableFetchError at cold start).
+    // Treat as unauthenticated; Supabase will retry on the next request.
+  }
 
   const path = request.nextUrl.pathname;
   const isAuthPage =

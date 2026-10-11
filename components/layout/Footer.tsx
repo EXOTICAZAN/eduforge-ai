@@ -19,7 +19,6 @@ const columns = [
       { label: "Blog", href: "/blog" },
       { label: "Guides", href: "/guides" },
       { label: "Help Center", href: "/help" },
-      { label: "API", href: "/api" },
     ],
   },
   {
@@ -42,7 +41,7 @@ const columns = [
 ];
 
 const socials = [
-  { icon: Globe, href: "#", label: "Website" },
+  { icon: Globe, href: "/", label: "Website" },
 ];
 export default function Footer() {
   return (

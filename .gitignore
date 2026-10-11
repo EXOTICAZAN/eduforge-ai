@@ -44,3 +44,4 @@ next-env.d.ts
 
 # local embedding model cache (transformers.js, ~25 MB, downloaded on first use)
 .models/
+educational-web-app/
